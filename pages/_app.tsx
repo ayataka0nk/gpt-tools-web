@@ -8,6 +8,7 @@ import { LoadingPage } from '../components/common/LoadingPage'
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
+      retry: false,
       suspense: true,
       refetchOnWindowFocus: false,
     },

@@ -15,8 +15,6 @@ export type Profile = {
 export type GetProfileResult = Profile
 
 export const getProfile = async () => {
-  // 3秒待機
-  await new Promise((resolve) => setTimeout(resolve, 3000))
   const response = await axiosUser().get('/profile')
   const responseBody = response.data as GetProfileResponseBody
   const result: GetProfileResult = {

@@ -1,4 +1,4 @@
-import { setCookie, parseCookies } from 'nookies'
+import { setCookie, parseCookies, destroyCookie } from 'nookies'
 
 export const tokenManager = {
   getAccessToken: () => {
@@ -32,5 +32,9 @@ export const tokenManager = {
       secure: true,
       path: '/',
     })
+  },
+  clearAllToken: () => {
+    destroyCookie(null, 'accessToken')
+    destroyCookie(null, 'refreshToken')
   },
 }

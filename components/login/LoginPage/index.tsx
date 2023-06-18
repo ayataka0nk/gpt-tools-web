@@ -5,6 +5,8 @@ import { Button } from '../../common/Button'
 import { Header } from '../../common/Header'
 import { postToken } from '../../../services/auth/postToken'
 import { useRouter } from 'next/router'
+import { useEffect } from 'react'
+import { getIsLoggedIn } from '../../../services/auth/isLoggedIn'
 
 type LoginFormValues = {
   email: string
@@ -12,6 +14,18 @@ type LoginFormValues = {
 }
 
 export const LoginPage = () => {
+  const router = useRouter()
+
+  // ログイン画面の表示をロックしたくないのでuseQueryを使わず、Loadingを表示しない。
+  useEffect(() => {
+    ;(async () => {
+      const isLoggedIn = await getIsLoggedIn()
+      if (isLoggedIn) {
+        router.push('/profile')
+      }
+    })()
+  }, [router])
+
   const form = useForm<LoginFormValues>({
     defaultValues: {
       email: '',
@@ -19,7 +33,6 @@ export const LoginPage = () => {
     },
   })
 
-  const router = useRouter()
   const handleSubmit = form.handleSubmit(async (data) => {
     try {
       // ログイン処理を実装する
@@ -27,7 +40,6 @@ export const LoginPage = () => {
         email: data.email,
         password: data.password,
       })
-      alert('ログインに成功しました。')
       router.push('/profile')
     } catch (e) {
       // まともなエラーハンドリングを実装する
