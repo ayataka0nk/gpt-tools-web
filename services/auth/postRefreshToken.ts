@@ -1,8 +1,6 @@
 import { axiosGuest } from '../axios'
-
-type PostRefreshTokenParams = {
-  refreshToken: string
-}
+import mem from 'mem'
+import { tokenManager } from '../tokenManager'
 
 type PostRefreshTokenResponseBody = {
   access_token: string
@@ -14,10 +12,9 @@ export type PostRefreshTokenResult = {
   refreshToken: string
 }
 
-export const postRefreshToken = async ({
-  refreshToken,
-}: PostRefreshTokenParams) => {
-  const response = await axiosGuest().post('/auth/token', undefined, {
+export const postRefreshToken = async () => {
+  const refreshToken = tokenManager.getRefreshToken()
+  const response = await axiosGuest().post('/auth/refresh_token', undefined, {
     headers: {
       Authorization: `Bearer ${refreshToken}`,
     },
@@ -29,3 +26,7 @@ export const postRefreshToken = async ({
   }
   return result
 }
+
+export const memorizedRefreshToken = mem(postRefreshToken, {
+  maxAge: 10000, // 10 seconds
+})
