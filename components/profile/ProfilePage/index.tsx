@@ -5,6 +5,8 @@ import styles from './styles.module.scss'
 import { tokenManager } from '../../../services/tokenManager'
 import { postClearToken } from '../../../services/auth/postClearToken'
 import { useRouter } from 'next/router'
+import { getRequestReply } from '../../../services/chat/postRequestReply'
+import { useState } from 'react'
 
 export const ProfilePage = () => {
   const router = useRouter()
@@ -25,6 +27,7 @@ export const ProfilePage = () => {
   }
 
   const profile = profileQuery.data
+  const [text, setText] = useState('')
   return (
     <div>
       <h1>Profile</h1>
@@ -32,6 +35,19 @@ export const ProfilePage = () => {
       <p>{profile.name}</p>
       <div className={styles['logout-button']}>
         <Button onClick={handleLogout}>ログアウト</Button>
+      </div>
+      <div>
+        <h2>出力サンプル</h2>
+        <Button
+          onClick={async () => {
+            for await (const word of getRequestReply()) {
+              setText((prev) => prev + word)
+            }
+          }}
+        >
+          ストリーム受信
+        </Button>
+        <div>{text}</div>
       </div>
     </div>
   )
