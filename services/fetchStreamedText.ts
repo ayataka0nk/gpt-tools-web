@@ -11,7 +11,8 @@ export async function* fetchStreamedText(
     ...init,
     headers: {
       ...init?.headers,
-      'Content-Type': 'plain/text',
+      Accept: 'plain/text',
+      'Content-Type': 'application/json',
       Authorization: `Bearer ${tokenManager.getAccessToken()}`,
     },
   })

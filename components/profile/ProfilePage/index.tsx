@@ -5,7 +5,7 @@ import styles from './styles.module.scss'
 import { tokenManager } from '../../../services/tokenManager'
 import { postClearToken } from '../../../services/auth/postClearToken'
 import { useRouter } from 'next/router'
-import { getRequestReply } from '../../../services/conversation/postRequestReply'
+import { postConversationMessage } from '../../../services/conversation/postConversationMessage'
 import { useState } from 'react'
 
 export const ProfilePage = () => {
@@ -40,7 +40,9 @@ export const ProfilePage = () => {
         <h2>出力サンプル</h2>
         <Button
           onClick={async () => {
-            for await (const word of getRequestReply()) {
+            for await (const word of postConversationMessage({
+              userMessage: 'こんにちは',
+            })) {
               setText((prev) => prev + word)
             }
           }}
