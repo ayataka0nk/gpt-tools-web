@@ -27,7 +27,7 @@ export const axiosUser = () => {
     (response) => response,
     async (error) => {
       const originalRequest = error.config
-      if (error.response.status === 401) {
+      if (axios.isAxiosError(error) && error.response?.status === 401) {
         const response = await memorizedRefreshToken()
         tokenManager.setAccessToken(response.accessToken)
         tokenManager.setRefreshToken(response.refreshToken)
