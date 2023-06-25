@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { getConversation } from '../../../services/conversation/getConversationMessages'
 import styles from './styles.module.scss'
 import { postConversationMessage } from '../../../services/conversation/postConversationMessage'
-import { FormEventHandler, useState } from 'react'
+import { FormEventHandler, useEffect, useState } from 'react'
 import { Message, MessageBlock } from './MessageBlock'
 import { Textarea } from '../../common/Form/TextArea'
 
@@ -22,12 +22,39 @@ export const ConversationPage = ({ conversationId }: ConversationPageProps) => {
 
   const [userMessage, setUserMessage] = useState('')
   const [isPending, setIsPending] = useState(false)
+  const [atBottom, setAtBottom] = useState(false)
   const [messages, setMessages] = useState<Message[]>(
     conversationMessagesQuery.data.map((rec) => ({
       role: rec.roleType,
       content: rec.content,
     }))
   )
+
+  useEffect(() => {
+    const onScroll = () => {
+      const scrollPos = window.scrollY || document.documentElement.scrollTop
+      const scrollHeight =
+        document.documentElement.scrollHeight -
+        document.documentElement.clientHeight
+      if (scrollPos === scrollHeight) {
+        setAtBottom(true)
+      } else {
+        setAtBottom(false)
+      }
+    }
+
+    window.addEventListener('scroll', onScroll)
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+  useEffect(() => {
+    window.scrollTo(0, document.documentElement.scrollHeight)
+  }, [])
+
+  useEffect(() => {
+    if (atBottom) {
+      window.scrollTo(0, document.documentElement.scrollHeight)
+    }
+  }, [atBottom, messages, userMessage])
 
   const sendMessage = async () => {
     // 無意味な空白文字だけの送信を防ぐ
