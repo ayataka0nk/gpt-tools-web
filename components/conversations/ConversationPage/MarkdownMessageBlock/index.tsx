@@ -2,6 +2,7 @@ import { ReactMarkdown } from '../../../common/ReactMarkdown'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
 import { CodeBlock } from '../CodeBlock'
+import styles from './styles.module.scss'
 
 type MarkdownMessageBlockProps = {
   message: string
@@ -14,7 +15,7 @@ export const MarkdownMessageBlock = ({
       remarkPlugins={[remarkGfm, remarkMath]}
       components={{
         p({ children }) {
-          return <p className="mb-2 last:mb-0">{children}</p>
+          return <p className={styles['p']}>{children}</p>
         },
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         code({ node, inline, className, children, ...props }) {
