@@ -11,6 +11,7 @@
   "dependencies": {
     "@tanstack/react-query": "^4.29.14",
     "@types/cookie": "^0.5.1",
+    "@types/react-syntax-highlighter": "^15.5.7",
     "axios": "^1.4.0",
     "cookie": "^0.5.0",
     "mem": "^9.0.2",
@@ -20,7 +21,10 @@
     "react-cookie": "^4.1.1",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.44.3",
-    "react-loader-spinner": "^5.3.4"
+    "react-loader-spinner": "^5.3.4",
+    "react-syntax-highlighter": "^15.5.0",
+    "remark-gfm": "^3.0.1",
+    "remark-math": "^5.1.1"
   },
   "devDependencies": {
     "@types/node": "20.3.1",

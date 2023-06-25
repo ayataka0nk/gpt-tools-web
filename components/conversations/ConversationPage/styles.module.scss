@@ -1,0 +1,21 @@
+.main {
+  height: 100vh;
+  display: grid;
+  grid-template-rows: 100px 1fr 100px;
+}
+
+.messages {
+  overflow-y: auto;
+}
+
+.input-area {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+}
+
+.button {
+  width: 50px;
+  height: 50px;
+}
