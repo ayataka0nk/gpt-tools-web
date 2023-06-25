@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
 import { getConversation } from '../../../services/conversation/getConversationMessages'
 import styles from './styles.module.scss'
-import { Input } from '../../common/Form/Input'
 import { postConversationMessage } from '../../../services/conversation/postConversationMessage'
 import { FormEventHandler, useState } from 'react'
 import { Message, MessageBlock } from './MessageBlock'
+import { Textarea } from '../../common/Form/TextArea'
 
 type ConversationPageProps = {
   conversationId: number
@@ -51,7 +51,7 @@ export const ConversationPage = ({ conversationId }: ConversationPageProps) => {
     }
   }
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setUserMessage(e.target.value)
   }
 
@@ -67,7 +67,11 @@ export const ConversationPage = ({ conversationId }: ConversationPageProps) => {
           </>
         </div>
         <form className={styles['input-area']} onSubmit={handleSubmit}>
-          <Input value={userMessage} onChange={handleInputChange} />
+          <Textarea
+            className={styles['text-area']}
+            value={userMessage}
+            onChange={handleInputChange}
+          />
           <button className={styles['button']}>送信</button>
         </form>
       </main>
