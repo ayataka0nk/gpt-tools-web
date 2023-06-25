@@ -22,7 +22,7 @@ export type ConversationMessage = {
 
 export type GetConversationMessagesResult = ConversationMessage[]
 
-export const getConversation = async ({
+export const getConversationMessages = async ({
   conversationId,
 }: GetConversationMessagesParams) => {
   const response = await axiosUser().get(

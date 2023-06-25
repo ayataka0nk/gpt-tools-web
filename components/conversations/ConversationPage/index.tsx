@@ -1,24 +1,37 @@
-import { useQuery } from '@tanstack/react-query'
-import { getConversation } from '../../../services/conversation/getConversationMessages'
+import { useQueries } from '@tanstack/react-query'
+import { getConversationMessages } from '../../../services/conversation/getConversationMessages'
 import styles from './styles.module.scss'
 import { postConversationMessage } from '../../../services/conversation/postConversationMessage'
 import { FormEventHandler, useEffect, useState } from 'react'
 import { Message, MessageBlock } from './MessageBlock'
 import { Textarea } from '../../common/Form/TextArea'
+import { getConversation } from '../../../services/conversation/getConversation'
 
 type ConversationPageProps = {
   conversationId: number
 }
 
 export const ConversationPage = ({ conversationId }: ConversationPageProps) => {
-  const conversationMessagesQuery = useQuery(
-    ['/conversation/messages', conversationId],
-    () => getConversation({ conversationId })
-  )
+  const [conversationQuery, conversationMessagesQuery] = useQueries({
+    queries: [
+      {
+        queryKey: ['/conversation', conversationId],
+        queryFn: () => getConversation({ conversationId }),
+      },
+      {
+        queryKey: ['/conversation/messages', conversationId],
+        queryFn: () => getConversationMessages({ conversationId }),
+      },
+    ],
+  })
 
-  if (typeof conversationMessagesQuery.data === 'undefined') {
+  if (
+    typeof conversationMessagesQuery.data === 'undefined' ||
+    typeof conversationQuery.data === 'undefined'
+  ) {
     throw new Error('conversationQuery.data is undefined')
   }
+  const conversation = conversationQuery.data
 
   const [userMessage, setUserMessage] = useState('')
   const [isPending, setIsPending] = useState(false)
@@ -46,6 +59,7 @@ export const ConversationPage = ({ conversationId }: ConversationPageProps) => {
     window.addEventListener('scroll', onScroll)
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
+
   useEffect(() => {
     window.scrollTo(0, document.documentElement.scrollHeight)
   }, [])
@@ -98,8 +112,12 @@ export const ConversationPage = ({ conversationId }: ConversationPageProps) => {
 
   return (
     <div>
+      <header className={styles['header']}>
+        <div className={styles['header-inner']}>
+          <h1 className={styles['conversation-title']}>{conversation.title}</h1>
+        </div>
+      </header>
       <main className={styles['main']}>
-        <h1>Conversation Page</h1>
         <div className={styles['messages']}>
           <>
             {messages.map((message, index) => (
@@ -107,17 +125,19 @@ export const ConversationPage = ({ conversationId }: ConversationPageProps) => {
             ))}
           </>
         </div>
-        <form className={styles['input-area']} onSubmit={handleSubmit}>
-          <Textarea
-            className={styles['text-area']}
-            value={userMessage}
-            onChange={handleInputChange}
-            onKeyDown={handleInputKeyDown}
-          />
-          <button className={styles['button']} disabled={isPending}>
-            送信
-          </button>
-        </form>
+        <div className={styles['form-block']}>
+          <form className={styles['form']} onSubmit={handleSubmit}>
+            <Textarea
+              className={styles['text-area']}
+              value={userMessage}
+              onChange={handleInputChange}
+              onKeyDown={handleInputKeyDown}
+            />
+            <button className={styles['button']} disabled={isPending}>
+              送信
+            </button>
+          </form>
+        </div>
       </main>
     </div>
   )

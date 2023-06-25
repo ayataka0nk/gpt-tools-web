@@ -1,15 +1,39 @@
-.main {
-  height: 100vh;
+.header {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  padding: 5px;
+  border-bottom: 1px solid #ccc;
 }
 
-.input-area {
+.header-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.conversation-title {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.messages {
+  // フォームの最小高さ81px, ヘッダの高さ35px
+  min-height: calc(100vh - 81px - 35px);
+}
+
+.form-block {
   position: sticky;
   bottom: 0;
+  background-color: white;
+}
+
+.form {
+  max-width: 1280px;
+  margin: 0 auto;
   display: flex;
   align-items: center;
   gap: 10px;
   padding: 20px;
-  background-color: white;
 }
 
 .button {
