@@ -21,7 +21,7 @@ export const ConversationPage = ({ conversationId }: ConversationPageProps) => {
   }
 
   const [userMessage, setUserMessage] = useState('')
-
+  const [isPending, setIsPending] = useState(false)
   const [messages, setMessages] = useState<Message[]>(
     conversationMessagesQuery.data.map((rec) => ({
       role: rec.roleType,
@@ -29,9 +29,9 @@ export const ConversationPage = ({ conversationId }: ConversationPageProps) => {
     }))
   )
 
-  const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
-    e.preventDefault()
-    if (userMessage === '') {
+  const sendMessage = async () => {
+    // 無意味な空白文字だけの送信を防ぐ
+    if (userMessage.replaceAll(/\n/g, '').replaceAll(' ', '') === '') {
       return
     }
     setUserMessage('')
@@ -40,6 +40,7 @@ export const ConversationPage = ({ conversationId }: ConversationPageProps) => {
       { role: 3, content: userMessage },
       { role: 2, content: '' },
     ])
+    setIsPending(true)
     for await (const message of postConversationMessage({
       conversationId,
       userMessage: userMessage,
@@ -49,10 +50,23 @@ export const ConversationPage = ({ conversationId }: ConversationPageProps) => {
         { role: 2, content: prev[prev.length - 1].content + message },
       ])
     }
+    setIsPending(false)
+  }
+
+  const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
+    e.preventDefault()
+    sendMessage()
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setUserMessage(e.target.value)
+  }
+
+  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && e.shiftKey) {
+      e.preventDefault()
+      sendMessage()
+    }
   }
 
   return (
@@ -71,8 +85,11 @@ export const ConversationPage = ({ conversationId }: ConversationPageProps) => {
             className={styles['text-area']}
             value={userMessage}
             onChange={handleInputChange}
+            onKeyDown={handleInputKeyDown}
           />
-          <button className={styles['button']}>送信</button>
+          <button className={styles['button']} disabled={isPending}>
+            送信
+          </button>
         </form>
       </main>
     </div>
