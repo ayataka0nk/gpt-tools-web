@@ -1,5 +1,6 @@
 import { MarkdownMessageBlock } from '../MarkdownMessageBlock'
 import styles from './styles.module.scss'
+import { RoleIcon } from '../RoleIcon'
 
 export type Message = {
   role: number
@@ -17,7 +18,7 @@ export const MessageBlock = ({ role, content }: MessageBlockProps) => {
       ].join(' ')}
     >
       <div className={styles['message-block']}>
-        <div>{role}</div>
+        <RoleIcon role={role} />
         <div>
           <MarkdownMessageBlock message={content} />
         </div>

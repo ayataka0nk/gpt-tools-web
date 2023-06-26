@@ -1,5 +1,5 @@
 export const RoleType = {
-  ADMIN: 1,
+  SYSTEM: 1,
   ASSISTANT: 2,
   USER: 3,
 }
