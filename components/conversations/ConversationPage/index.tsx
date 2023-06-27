@@ -85,7 +85,10 @@ export const ConversationPage = ({ conversationId }: ConversationPageProps) => {
 
   const sendMessage = async () => {
     // 無意味な空白文字だけの送信を防ぐ
-    if (userMessage.replaceAll(/\n/g, '').replaceAll(' ', '') === '') {
+    if (
+      userMessage.replaceAll(/\n/g, '').replaceAll(' ', '') === '' ||
+      isPending
+    ) {
       return
     }
     setUserMessage('')

@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { getConversations } from '../../../services/conversation/getConversations'
-import Link from 'next/link'
 import styles from './styles.module.scss'
+import { ConversationCard } from './ConversationCard'
 
 export const ConversationsPage = () => {
   const conversationsQuery = useQuery(['/conversations'], () =>
@@ -15,15 +15,10 @@ export const ConversationsPage = () => {
       <h1>Conversations Page</h1>
       <div className={styles['cards']}>
         {conversationsQuery.data.map((conversation) => (
-          <Link
+          <ConversationCard
             key={conversation.conversationId}
-            className={styles['card']}
-            href={`/conversations/${conversation.conversationId}`}
-          >
-            <div>id: {conversation.conversationId}</div>
-            <div>title: {conversation.title}</div>
-            <div>createdAt: {conversation.createdAt}</div>
-          </Link>
+            {...conversation}
+          />
         ))}
       </div>
     </div>
