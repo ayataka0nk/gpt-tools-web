@@ -1,8 +1,8 @@
-import Image from 'next/image'
 import { RoleType } from '../../../../constants/RoleType'
 import styles from './styles.module.scss'
 import { AssistantIcon } from '../../../common/Icons/AssistantIcon'
 import { UserIcon } from '../../../common/Icons/UserIcon'
+import { SystemIcon } from '../../../common/Icons/SystemIcon'
 
 type RoleIconProps = {
   role: number
@@ -20,11 +20,8 @@ export const RoleIcon = ({ role }: RoleIconProps) => {
     )
   } else if (role === RoleType.SYSTEM) {
     return (
-      <Image
-        src="/images/assistant-icon.svg"
-        width="40"
-        height="40"
-        alt="system"
+      <SystemIcon
+        className={[styles['icon'], styles['system-icon']].join(' ')}
       />
     )
   } else {

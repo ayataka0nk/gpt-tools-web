@@ -6,42 +6,55 @@ import { FormEventHandler, useEffect, useState } from 'react'
 import { Message, MessageBlock } from './MessageBlock'
 import { Textarea } from '../../common/Form/TextArea'
 import { getConversation } from '../../../services/conversation/getConversation'
+import { getSystemMessages } from '../../../services/conversation/getSystemMessage'
+import { RoleType } from '../../../constants/RoleType'
 
 type ConversationPageProps = {
   conversationId: number
 }
 
 export const ConversationPage = ({ conversationId }: ConversationPageProps) => {
-  const [conversationQuery, conversationMessagesQuery] = useQueries({
-    queries: [
-      {
-        queryKey: ['/conversation', conversationId],
-        queryFn: () => getConversation({ conversationId }),
-      },
-      {
-        queryKey: ['/conversation/messages', conversationId],
-        queryFn: () => getConversationMessages({ conversationId }),
-      },
-    ],
-  })
+  const [conversationQuery, conversationMessagesQuery, systemMessagesQuery] =
+    useQueries({
+      queries: [
+        {
+          queryKey: ['/conversation', conversationId],
+          queryFn: () => getConversation({ conversationId }),
+        },
+        {
+          queryKey: ['/conversation/messages', conversationId],
+          queryFn: () => getConversationMessages({ conversationId }),
+        },
+        {
+          queryKey: ['/conversation/system-messages', conversationId],
+          queryFn: () => getSystemMessages({ conversationId }),
+        },
+      ],
+    })
 
   if (
     typeof conversationMessagesQuery.data === 'undefined' ||
-    typeof conversationQuery.data === 'undefined'
+    typeof conversationQuery.data === 'undefined' ||
+    typeof systemMessagesQuery.data === 'undefined'
   ) {
     throw new Error('conversationQuery.data is undefined')
   }
   const conversation = conversationQuery.data
+  const systemMessages = systemMessagesQuery.data
 
   const [userMessage, setUserMessage] = useState('')
   const [isPending, setIsPending] = useState(false)
   const [atBottom, setAtBottom] = useState(false)
-  const [messages, setMessages] = useState<Message[]>(
-    conversationMessagesQuery.data.map((rec) => ({
+  const [messages, setMessages] = useState<Message[]>([
+    ...systemMessages.map((rec) => ({
+      role: RoleType.SYSTEM,
+      content: rec.content,
+    })),
+    ...conversationMessagesQuery.data.map((rec) => ({
       role: rec.roleType,
       content: rec.content,
-    }))
-  )
+    })),
+  ])
 
   useEffect(() => {
     const onScroll = () => {
