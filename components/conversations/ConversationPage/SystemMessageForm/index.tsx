@@ -4,17 +4,21 @@ import styles from './styles.module.scss'
 import { RoleIcon } from '../RoleIcon'
 import { SendIcon } from '../../../common/Icons/SendIcon'
 
-type SystemMessageFormProps = {
+export type ConversationSettings = {
+  systemMessage: string
+  modelType: number
+}
+type ConversationSettingFormProps = {
   value: string
   onChange: (value: string) => void
   onSendRequest: () => void
 }
 
-export const SystemMessageForm = ({
+export const ConversationSettingForm = ({
   value,
   onChange,
   onSendRequest,
-}: SystemMessageFormProps) => {
+}: ConversationSettingFormProps) => {
   // 親コンポーネントで別経路でのシステムメッセージ更新をするので、その辺の制御も親に任せる。
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {

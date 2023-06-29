@@ -4,6 +4,7 @@ export type Conversation = {
   conversationId: number
   userId: number
   title?: string
+  modelType: number
   createdAt: string
 }
 
@@ -11,6 +12,7 @@ type GetConversationsResponseBody = {
   conversation_id: number
   user_id: number
   title: string | null
+  model_type: number
   created_at: string
 }
 export type GetConversationsResult = Conversation
@@ -27,6 +29,7 @@ export const getConversation = async ({
     conversationId: responseBody.conversation_id,
     userId: responseBody.user_id,
     title: responseBody.title ?? undefined,
+    modelType: responseBody.model_type,
     createdAt: responseBody.created_at,
   }
   return result

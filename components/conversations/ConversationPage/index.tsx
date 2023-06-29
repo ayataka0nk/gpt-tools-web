@@ -2,10 +2,13 @@ import styles from './styles.module.scss'
 import { FormEventHandler } from 'react'
 import { MessageBlock } from './MessageBlock'
 import { Textarea } from '../../common/Form/TextArea'
-import { SystemMessageForm } from './SystemMessageForm'
-import { useConversationState } from './useConversationState'
+import { ConversationSettingForm } from './SystemMessageForm'
+import { useConversationPageHooks } from './useConversationPageHooks'
 import { useConversationPageQueries } from './useConversationPageQueries'
 import { ConversationTitle } from './ConversationTitle'
+import { useConversationState } from './useConversationState'
+import { RoleType } from '../../../constants/RoleType'
+import { useMessagesAutoScroll } from './useMessagesAutoScroll'
 
 type ConversationPageProps = {
   conversationId: number
@@ -15,20 +18,23 @@ export const ConversationPage = ({ conversationId }: ConversationPageProps) => {
   const { conversation, conversationMessages, systemMessages } =
     useConversationPageQueries({ conversationId })
 
-  const {
-    isPending,
-    isNoMessages,
-    systemMessage,
-    messages,
-    userMessage,
-    changeUserMessage,
-    changeSystemMessage,
-    sendMessage,
-    sendSystemMessage,
-  } = useConversationState({
-    conversation: conversation,
+  const [state, dispatch] = useConversationState({
     conversationMessages: conversationMessages,
-    systemMessages: systemMessages,
+  })
+
+  const { isPending, systemMessage, messages, userMessage } = state
+
+  const isNoMessages =
+    state.messages.length === 0 &&
+    systemMessages.length === 0 &&
+    !state.isPending
+
+  useMessagesAutoScroll({ userMessage: userMessage, messages: messages })
+
+  const { sendMessage, sendSystemMessage } = useConversationPageHooks({
+    conversationId: conversationId,
+    state: state,
+    dispatch: dispatch,
   })
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
@@ -37,7 +43,10 @@ export const ConversationPage = ({ conversationId }: ConversationPageProps) => {
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    changeUserMessage(e.target.value)
+    dispatch({
+      type: 'changeUserMessage',
+      payload: { userMessage: e.target.value },
+    })
   }
 
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -48,7 +57,10 @@ export const ConversationPage = ({ conversationId }: ConversationPageProps) => {
   }
 
   const handleSystemMessageChange = (value: string) => {
-    changeSystemMessage(value)
+    dispatch({
+      type: 'changeSystemMessage',
+      payload: { systemMessage: value },
+    })
   }
 
   const handleSystemMessageSendRequest = () => {
@@ -63,18 +75,23 @@ export const ConversationPage = ({ conversationId }: ConversationPageProps) => {
             conversationId={conversation.conversationId}
             title={conversation.title}
           />
+          {/* <LLMModel modelType={conversation.modelType} /> */}
         </div>
       </header>
       <main className={styles['main']}>
         <div className={styles['messages']}>
           <>
             {isNoMessages && (
-              <SystemMessageForm
+              <ConversationSettingForm
                 value={systemMessage}
                 onChange={handleSystemMessageChange}
                 onSendRequest={handleSystemMessageSendRequest}
               />
             )}
+            {systemMessages.map((message, index) => (
+              <MessageBlock key={index} role={RoleType.SYSTEM} {...message} />
+            ))}
+
             {messages.map((message, index) => (
               <MessageBlock key={index} {...message} />
             ))}
