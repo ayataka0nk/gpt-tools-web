@@ -9,12 +9,12 @@
 .header-inner {
   max-width: 1280px;
   margin: 0 auto;
-  display: flex;
+  display: grid;
 }
 
 .messages {
-  // フォームの最小高さ81px, ヘッダの高さ51px
-  min-height: calc(100vh - 81px - 51px);
+  // フォームの最小高さ93px, ヘッダの高さ51px
+  min-height: calc(100vh - 93px - 51px);
 }
 
 .form-block {

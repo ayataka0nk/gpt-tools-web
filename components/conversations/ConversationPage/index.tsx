@@ -1,7 +1,5 @@
 import styles from './styles.module.scss'
-import { FormEventHandler } from 'react'
 import { MessageBlock } from './MessageBlock'
-import { Textarea } from '../../common/Form/TextArea'
 import { ConversationSettingForm } from './SystemMessageForm'
 import { useConversationPageHooks } from './useConversationPageHooks'
 import { useConversationPageQueries } from './useConversationPageQueries'
@@ -9,6 +7,7 @@ import { ConversationTitle } from './ConversationTitle'
 import { useConversationState } from './useConversationState'
 import { RoleType } from '../../../constants/RoleType'
 import { useMessagesAutoScroll } from './useMessagesAutoScroll'
+import { UserMessageForm } from './UserMessageForm'
 
 type ConversationPageProps = {
   conversationId: number
@@ -25,9 +24,7 @@ export const ConversationPage = ({ conversationId }: ConversationPageProps) => {
   const { isPending, systemMessage, messages, userMessage } = state
 
   const isNoMessages =
-    state.messages.length === 0 &&
-    systemMessages.length === 0 &&
-    !state.isPending
+    messages.length === 0 && systemMessages.length === 0 && !isPending
 
   useMessagesAutoScroll({ userMessage: userMessage, messages: messages })
 
@@ -37,23 +34,11 @@ export const ConversationPage = ({ conversationId }: ConversationPageProps) => {
     dispatch: dispatch,
   })
 
-  const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
-    e.preventDefault()
-    sendMessage()
-  }
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleUserMessageChange = (value: string) => {
     dispatch({
       type: 'changeUserMessage',
-      payload: { userMessage: e.target.value },
+      payload: { userMessage: value },
     })
-  }
-
-  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && e.shiftKey) {
-      e.preventDefault()
-      sendMessage()
-    }
   }
 
   const handleSystemMessageChange = (value: string) => {
@@ -61,6 +46,9 @@ export const ConversationPage = ({ conversationId }: ConversationPageProps) => {
       type: 'changeSystemMessage',
       payload: { systemMessage: value },
     })
+  }
+  const handleUserMessageSendRequest = () => {
+    sendMessage()
   }
 
   const handleSystemMessageSendRequest = () => {
@@ -98,7 +86,12 @@ export const ConversationPage = ({ conversationId }: ConversationPageProps) => {
           </>
         </div>
         <div className={styles['form-block']}>
-          <form className={styles['form']} onSubmit={handleSubmit}>
+          <UserMessageForm
+            value={userMessage}
+            onChange={handleUserMessageChange}
+            onSendRequest={handleUserMessageSendRequest}
+          />
+          {/* <form className={styles['form']} onSubmit={handleSubmit}>
             <Textarea
               className={styles['text-area']}
               value={userMessage}
@@ -108,7 +101,7 @@ export const ConversationPage = ({ conversationId }: ConversationPageProps) => {
             <button className={styles['button']} disabled={isPending}>
               送信
             </button>
-          </form>
+          </form> */}
         </div>
       </main>
     </div>

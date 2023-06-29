@@ -62,12 +62,7 @@ export const useConversationPageHooks = ({
   ])
 
   return {
-    // isPending: state.isPending,
-    // messages: state.messages,
-    // userMessage: state.userMessage,
-    // systemMessage: state.systemMessage,
     sendMessage,
     sendSystemMessage,
-    dispatch,
   }
 }
