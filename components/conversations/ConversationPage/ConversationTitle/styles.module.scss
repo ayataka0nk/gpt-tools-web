@@ -1,0 +1,18 @@
+.conversation-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 40px;
+  width: max-content;
+}
+
+.h1 {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}

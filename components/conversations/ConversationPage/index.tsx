@@ -5,6 +5,7 @@ import { Textarea } from '../../common/Form/TextArea'
 import { SystemMessageForm } from './SystemMessageForm'
 import { useConversationState } from './useConversationState'
 import { useConversationPageQueries } from './useConversationPageQueries'
+import { ConversationTitle } from './ConversationTitle'
 
 type ConversationPageProps = {
   conversationId: number
@@ -13,6 +14,7 @@ type ConversationPageProps = {
 export const ConversationPage = ({ conversationId }: ConversationPageProps) => {
   const { conversation, conversationMessages, systemMessages } =
     useConversationPageQueries({ conversationId })
+
   const {
     isPending,
     isNoMessages,
@@ -57,9 +59,10 @@ export const ConversationPage = ({ conversationId }: ConversationPageProps) => {
     <div>
       <header className={styles['header']}>
         <div className={styles['header-inner']}>
-          <h1 className={styles['conversation-title']}>
-            {conversation.title ?? 'No Title'}
-          </h1>
+          <ConversationTitle
+            conversationId={conversation.conversationId}
+            title={conversation.title}
+          />
         </div>
       </header>
       <main className={styles['main']}>

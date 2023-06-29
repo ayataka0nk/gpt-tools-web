@@ -2,6 +2,7 @@ import { useQueries } from '@tanstack/react-query'
 import { getConversation } from '../../../services/conversation/getConversation'
 import { getConversationMessages } from '../../../services/conversation/getConversationMessages'
 import { getSystemMessages } from '../../../services/conversation/getSystemMessage'
+import { QueryKeys } from './QueryKeys'
 
 type ConversationPageQueriresProps = {
   conversationId: number
@@ -13,15 +14,15 @@ export const useConversationPageQueries = ({
     useQueries({
       queries: [
         {
-          queryKey: ['/conversation', conversationId],
+          queryKey: QueryKeys.conversation(conversationId),
           queryFn: () => getConversation({ conversationId }),
         },
         {
-          queryKey: ['/conversation/messages', conversationId],
+          queryKey: QueryKeys.conversationMessages(conversationId),
           queryFn: () => getConversationMessages({ conversationId }),
         },
         {
-          queryKey: ['/conversation/system-messages', conversationId],
+          queryKey: QueryKeys.systemMessages(conversationId),
           queryFn: () => getSystemMessages({ conversationId }),
         },
       ],

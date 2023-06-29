@@ -11,14 +11,9 @@
   margin: 0 auto;
 }
 
-.conversation-title {
-  font-size: 16px;
-  font-weight: bold;
-}
-
 .messages {
-  // フォームの最小高さ81px, ヘッダの高さ35px
-  min-height: calc(100vh - 81px - 35px);
+  // フォームの最小高さ81px, ヘッダの高さ51px
+  min-height: calc(100vh - 81px - 51px);
 }
 
 .form-block {

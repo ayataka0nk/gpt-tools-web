@@ -9,3 +9,13 @@
   border-radius: 5px;
   outline: 1px solid gray;
 }
+
+.button-none {
+  background-color: transparent;
+  outline: none;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  width: max-content;
+  height: max-content;
+}
