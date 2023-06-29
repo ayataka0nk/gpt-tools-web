@@ -1,0 +1,38 @@
+.system-message-form {
+  max-width: 1280px;
+  padding: 20px;
+  margin: 0 auto;
+  display: flex;
+  gap: 20px;
+}
+
+.system-message-form-wrapper {
+  background-color: #d3d3d3;
+  border-bottom: rgba(0, 0, 0, 0.1) 1px solid;
+}
+
+.textarea-wrapper {
+  position: relative;
+  flex: 1;
+}
+
+.textarea {
+  padding-right: 45px;
+  min-height: 50px;
+}
+
+.send-button {
+  position: absolute;
+  right: 5px;
+  bottom: 10px;
+  width: 35px;
+  height: 35px;
+  min-width: 35px;
+  min-height: 35px;
+  padding: 7px;
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}

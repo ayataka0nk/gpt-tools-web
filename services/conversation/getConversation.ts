@@ -3,14 +3,14 @@ import { axiosUser } from '../axios'
 export type Conversation = {
   conversationId: number
   userId: number
-  title: string
+  title?: string
   createdAt: string
 }
 
 type GetConversationsResponseBody = {
   conversation_id: number
   user_id: number
-  title: string
+  title: string | null
   created_at: string
 }
 export type GetConversationsResult = Conversation
@@ -26,7 +26,7 @@ export const getConversation = async ({
   const result: GetConversationsResult = {
     conversationId: responseBody.conversation_id,
     userId: responseBody.user_id,
-    title: responseBody.title,
+    title: responseBody.title ?? undefined,
     createdAt: responseBody.created_at,
   }
   return result

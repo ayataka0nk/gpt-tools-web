@@ -10,8 +10,8 @@ export const ConversationCard = ({
 }: ConversationCardProps) => {
   return (
     <Link className={styles['card']} href={`/conversations/${conversationId}`}>
-      <div>title: {title}</div>
-      <div>createdAt: {createdAt}</div>
+      <p>{title ?? 'No Title'}</p>
+      <p>{createdAt}</p>
     </Link>
   )
 }

@@ -1,4 +1,5 @@
 import { axiosUser } from '../axios'
+import axios from 'axios'
 
 export type SystemMessage = {
   conversationMessageId: number
@@ -23,17 +24,26 @@ type GetSystemMessagesParams = {
 export const getSystemMessages = async ({
   conversationId,
 }: GetSystemMessagesParams) => {
-  const response = await axiosUser().get(
-    `/conversations/${conversationId}/system-messages`
-  )
-  const responseBody = response.data as GetSystemMessagesResponseBody
-  const result: GetSystemMessagesResult = [
-    {
-      conversationMessageId: responseBody.conversation_message_id,
-      conversationId: responseBody.conversation_id,
-      content: responseBody.content,
-      createdAt: responseBody.created_at,
-    },
-  ]
-  return result
+  try {
+    const response = await axiosUser().get(
+      `/conversations/${conversationId}/system-messages`
+    )
+
+    const responseBody = response.data as GetSystemMessagesResponseBody
+    const result: GetSystemMessagesResult = [
+      {
+        conversationMessageId: responseBody.conversation_message_id,
+        conversationId: responseBody.conversation_id,
+        content: responseBody.content,
+        createdAt: responseBody.created_at,
+      },
+    ]
+    return result
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 404) {
+      return []
+    } else {
+      throw error
+    }
+  }
 }

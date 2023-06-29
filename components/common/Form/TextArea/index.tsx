@@ -1,3 +1,4 @@
+import { forwardRef } from 'react'
 import styles from './styles.module.scss'
 import TextareaAutosize, {
   TextareaAutosizeProps,
@@ -5,11 +6,16 @@ import TextareaAutosize, {
 
 type TextareaProps = TextareaAutosizeProps
 
-export const Textarea = ({ className, ...props }: TextareaProps) => {
-  return (
-    <TextareaAutosize
-      className={[styles['textarea'], className].join(' ')}
-      {...props}
-    />
-  )
-}
+export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
+  ({ className, ...props }, ref) => {
+    return (
+      <TextareaAutosize
+        ref={ref}
+        className={[styles['textarea'], className].join(' ')}
+        {...props}
+      />
+    )
+  }
+)
+
+Textarea.displayName = 'Textarea'
