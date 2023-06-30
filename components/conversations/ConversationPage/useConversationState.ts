@@ -8,6 +8,7 @@ export type ConversationState = {
   userMessage: string
   systemMessage: string
   messages: Message[]
+  modelType: number
 }
 export type ConversationAction =
   | {
@@ -17,6 +18,10 @@ export type ConversationAction =
   | {
       type: 'changeSystemMessage'
       payload: { systemMessage: string }
+    }
+  | {
+      type: 'changeModelType'
+      payload: { modelType: number }
     }
   | {
       type: 'beforeSendUserMessage'
@@ -32,15 +37,13 @@ export type ConversationAction =
       type: 'afterSendSystemMessage'
     }
 
-type UseConversationStateProps = {
-  conversationMessages: ConversationMessage[]
-}
-
 const reducer = (state: ConversationState, action: ConversationAction) => {
   if (action.type === 'changeUserMessage') {
     return { ...state, userMessage: action.payload.userMessage }
   } else if (action.type === 'changeSystemMessage') {
     return { ...state, systemMessage: action.payload.systemMessage }
+  } else if (action.type === 'changeModelType') {
+    return { ...state, modelType: action.payload.modelType }
   } else if (action.type === 'beforeSendUserMessage') {
     return {
       ...state,
@@ -80,13 +83,20 @@ const reducer = (state: ConversationState, action: ConversationAction) => {
   }
 }
 
+type UseConversationStateProps = {
+  conversationMessages: ConversationMessage[]
+  modelType: number
+}
+
 export const useConversationState = ({
   conversationMessages,
+  modelType,
 }: UseConversationStateProps) => {
   const initialState: ConversationState = {
     isPending: false,
     userMessage: '',
     systemMessage: '',
+    modelType: modelType,
     messages: [
       ...conversationMessages.map((rec) => ({
         role: rec.roleType,

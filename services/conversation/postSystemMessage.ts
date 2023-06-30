@@ -3,6 +3,7 @@ import { axiosUser } from '../axios'
 export type PostSystemMessageParams = {
   conversationId: number
   systemMessage: string
+  modelType: number
 }
 
 export type PostSystemMessageResult = {
@@ -11,6 +12,7 @@ export type PostSystemMessageResult = {
 
 type PostSystemMessageRequestBody = {
   system_message: string
+  model_type: number
 }
 
 type PostSystemMessageResponseBody = {
@@ -20,11 +22,13 @@ type PostSystemMessageResponseBody = {
 export const postSystemMessage = async ({
   conversationId,
   systemMessage,
+  modelType,
 }: PostSystemMessageParams) => {
   const body: PostSystemMessageRequestBody = {
     system_message: systemMessage,
+    model_type: modelType,
   }
-  const result = await axiosUser().post(
+  const result = await axiosUser().put(
     `/conversations/${conversationId}/system-messages`,
     body
   )

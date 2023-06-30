@@ -1,16 +1,15 @@
-.message-form {
+.message-form-wrapper {
+  background-color: white;
   border-top: rgba(0, 0, 0, 0.1) 1px solid;
+}
+
+.message-form {
   max-width: 1280px;
   padding: 20px;
   padding-top: 25px;
   margin: 0 auto;
   display: flex;
   gap: 20px;
-}
-
-.message-form-wrapper {
-  background-color: white;
-  border-bottom: rgba(0, 0, 0, 0.1) 1px solid;
 }
 
 .textarea-wrapper {

@@ -1,12 +1,13 @@
 import { Dispatch, useCallback } from 'react'
 import { isEmpty } from '../../../utils/isEmpty'
 import { postConversationMessage } from '../../../services/conversation/postConversationMessage'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import {
   PostSystemMessageParams,
   postSystemMessage,
 } from '../../../services/conversation/postSystemMessage'
 import { ConversationAction, ConversationState } from './useConversationState'
+import { QueryKeys } from './QueryKeys'
 
 type ConversationStateProps = {
   conversationId: number
@@ -18,8 +19,15 @@ export const useConversationPageHooks = ({
   state,
   dispatch,
 }: ConversationStateProps) => {
+  const queryClient = useQueryClient()
   const postSystemMessageMutation = useMutation(
-    (params: PostSystemMessageParams) => postSystemMessage(params)
+    (params: PostSystemMessageParams) => postSystemMessage(params),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(QueryKeys.systemMessages(conversationId))
+        queryClient.invalidateQueries(QueryKeys.conversation(conversationId))
+      },
+    }
   )
 
   const sendMessage = useCallback(async () => {
@@ -27,6 +35,7 @@ export const useConversationPageHooks = ({
     if (isEmpty(state.userMessage) || state.isPending) {
       return
     }
+
     dispatch({
       type: 'beforeSendUserMessage',
     })
@@ -40,6 +49,9 @@ export const useConversationPageHooks = ({
         payload: { fragment: message },
       })
     }
+    dispatch({
+      type: 'afterSendUserMessage',
+    })
   }, [conversationId, dispatch, state.isPending, state.userMessage])
 
   const sendSystemMessage = useCallback(async () => {
@@ -49,6 +61,7 @@ export const useConversationPageHooks = ({
     await postSystemMessageMutation.mutateAsync({
       conversationId: conversationId,
       systemMessage: state.systemMessage,
+      modelType: state.modelType,
     })
     dispatch({
       type: 'afterSendSystemMessage',
@@ -58,6 +71,7 @@ export const useConversationPageHooks = ({
     dispatch,
     postSystemMessageMutation,
     state.isPending,
+    state.modelType,
     state.systemMessage,
   ])
 
